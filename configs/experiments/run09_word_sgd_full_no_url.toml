@@ -1,0 +1,32 @@
+[dataset]
+label_column = "category_ind"
+text_fields = ["vendor", "name", "model", "type_prefix", "description"]
+include_domain = false
+include_url_tokens = false
+description_max_len = 300
+url_token_limit = 0
+
+[split]
+test_size = 0.15
+random_state = 42
+
+[vectorizer]
+kind = "word"
+analyzer = "word"
+ngram_min = 1
+ngram_max = 2
+min_df = 2
+max_features = 150000
+sublinear_tf = true
+
+[model]
+kind = "sgd"
+loss = "log_loss"
+alpha = 0.000003
+max_iter = 8000
+tol = 1e-4
+class_weight = "balanced"
+random_state = 42
+
+[run]
+name = "run09_word_sgd_full_no_url"

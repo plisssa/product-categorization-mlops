@@ -1,0 +1,7 @@
+# Доп. зависимости для DAG (ставятся в образ Airflow поверх базового).
+scikit-learn==1.6.1
+pandas==2.2.3
+pyarrow==18.1.0
+mlflow==3.4.0
+boto3==1.37.1
+evidently==0.4.40

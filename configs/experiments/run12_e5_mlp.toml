@@ -1,0 +1,18 @@
+[dataset]
+label_column = "category_ind"
+[embeddings]
+text_model = "intfloat/multilingual-e5-large"
+use_image = false
+batch_size = 128
+text_cache = "artifacts/emb/text_train.npy"
+text_cache_test = "artifacts/emb/text_test.npy"
+[model]
+kind = "mlp"
+hidden_layer_sizes = [768]
+alpha = 1e-4
+max_iter = 80
+[split]
+test_size = 0.15
+random_state = 42
+[run]
+name = "run12_e5_mlp"

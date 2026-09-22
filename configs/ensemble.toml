@@ -1,0 +1,8 @@
+# Описание финального ансамбля (для документации; запуск см. blend_submission.py).
+# Веса подбираются на отложенной валидации.
+[ensemble]
+members = [
+  { name = "tfidf_sgd",   proba = "artifacts/proba/tfidf.npz",    weight = 1.0 },
+  { name = "e5_logreg",   proba = "artifacts/proba/e5_logreg.npz", weight = 1.5 },
+  { name = "e5_clip_mlp", proba = "artifacts/proba/e5_clip.npz",   weight = 2.0 },
+]

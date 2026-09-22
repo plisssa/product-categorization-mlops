@@ -1,0 +1,17 @@
+services:
+  airflow:
+    image: apache/airflow:2.10.4-python3.11
+    command: standalone
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      PYTHONPATH: "/opt/airflow/src:/opt/airflow/monitoring/drift"
+    ports:
+      - "8088:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ../src:/opt/airflow/src
+      - ../configs:/opt/airflow/configs
+      - ../scripts:/opt/airflow/scripts
+      - ../monitoring/drift:/opt/airflow/monitoring/drift
+      - ../data:/opt/airflow/data
+      - ../artifacts:/opt/airflow/artifacts

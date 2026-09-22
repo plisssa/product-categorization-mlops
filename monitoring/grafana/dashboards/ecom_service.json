@@ -1,0 +1,40 @@
+{
+  "title": "Ecom Category Service",
+  "uid": "ecom-service",
+  "schemaVersion": 39,
+  "version": 1,
+  "time": { "from": "now-1h", "to": "now" },
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "timeseries", "title": "Request rate by status", "id": 1,
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [ { "expr": "sum by (status) (rate(ecom_predict_requests_total[1m]))", "legendFormat": "{{status}}" } ]
+    },
+    {
+      "type": "timeseries", "title": "Latency p50 / p95 (s)", "id": 2,
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "histogram_quantile(0.5, sum(rate(ecom_predict_latency_seconds_bucket[5m])) by (le))", "legendFormat": "p50" },
+        { "expr": "histogram_quantile(0.95, sum(rate(ecom_predict_latency_seconds_bucket[5m])) by (le))", "legendFormat": "p95" }
+      ]
+    },
+    {
+      "type": "stat", "title": "Cache hit ratio", "id": 3,
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "percentunit" } },
+      "targets": [ { "expr": "sum(rate(ecom_cache_hits_total[5m])) / clamp_min(sum(rate(ecom_cache_hits_total[5m])) + sum(rate(ecom_cache_misses_total[5m])), 0.001)" } ]
+    },
+    {
+      "type": "stat", "title": "5xx error ratio", "id": 4,
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "thresholds": { "steps": [ { "color": "green", "value": null }, { "color": "red", "value": 0.05 } ] } } },
+      "targets": [ { "expr": "sum(rate(ecom_predict_requests_total{status=\"500\"}[5m])) / clamp_min(sum(rate(ecom_predict_requests_total[5m])), 0.001)" } ]
+    },
+    {
+      "type": "timeseries", "title": "Top predicted classes", "id": 5,
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "targets": [ { "expr": "topk(10, sum by (category_ind) (rate(ecom_predicted_class_total[5m])))", "legendFormat": "{{category_ind}}" } ]
+    }
+  ]
+}

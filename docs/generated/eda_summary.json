@@ -1,0 +1,38 @@
+{
+  "summary": {
+    "train_rows": 111405,
+    "test_rows": 37136,
+    "tree_rows": 223,
+    "used_categories_in_train": 207,
+    "missing_tree_categories": 16,
+    "root_groups": 21,
+    "duplicate_rows_train": 4576,
+    "duplicate_urls_train": 12067,
+    "duplicate_image_urls_train": 38488,
+    "min_class_count": 1,
+    "median_class_count": 25,
+    "mean_class_count": 538.2,
+    "max_class_count": 31563
+  },
+  "feature_fill_rate": {
+    "vendor": 94.0,
+    "url": 100.0,
+    "image_url": 100.0,
+    "name": 56.14,
+    "model": 43.36,
+    "description": 35.18,
+    "type_prefix": 17.16
+  },
+  "root_distribution": {
+    "Красота и уход": 32.02,
+    "Мебель": 31.37,
+    "Одежда, обувь и аксессуары": 18.32,
+    "Прочие категории": 18.29
+  },
+  "class_imbalance": {
+    "classes_lt_10": 51,
+    "classes_lt_20": 91,
+    "classes_lt_50": 135,
+    "classes_ge_1000": 16
+  }
+}

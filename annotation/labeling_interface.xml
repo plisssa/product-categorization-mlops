@@ -1,0 +1,17 @@
+<View style="display:flex; gap: 24px; align-items:flex-start;">
+  <View style="width: 55%; border: 1px solid #ddd; padding: 16px; border-radius: 12px;">
+    <Header value="Карточка товара" />
+    <Text name="product_name" value="$name" style="font-size: 18px; font-weight: bold;" />
+    <Text name="vendor" value="$vendor" style="font-size: 15px; color: #444;" />
+    <Text name="product_description" value="$description" />
+    <HyperText name="product_url" value="&lt;p&gt;&lt;a href='$url' target='_blank'&gt;Открыть товар в браузере&lt;/a&gt;&lt;/p&gt;" />
+  </View>
+
+  <View style="width: 45%; border: 1px solid #ddd; padding: 16px; border-radius: 12px;">
+    <Image name="product_image" value="$image_url" maxWidth="400px" />
+    <Header value="Дополнительная разметка" />
+    <Text value="Заполните цену товара. Это поле можно использовать как новую фичу для будущей модели." />
+    <Number name="price" toName="product_name" required="true" min="0" step="0.01" />
+    <TextArea name="annotator_comment" toName="product_name" required="false" placeholder="Комментарий аннотатора (опционально)" />
+  </View>
+</View>

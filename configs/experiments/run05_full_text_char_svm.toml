@@ -1,0 +1,30 @@
+[dataset]
+label_column = "category_ind"
+text_fields = ["vendor", "name", "model", "type_prefix", "description"]
+include_domain = true
+include_url_tokens = true
+description_max_len = 300
+url_token_limit = 12
+
+[split]
+test_size = 0.15
+random_state = 42
+
+[vectorizer]
+kind = "char"
+analyzer = "char_wb"
+ngram_min = 3
+ngram_max = 6
+min_df = 2
+char_max_features = 220000
+sublinear_tf = true
+
+[model]
+kind = "linear_svc"
+C = 1.0
+max_iter = 5000
+class_weight = "balanced"
+random_state = 42
+
+[run]
+name = "run05_full_text_char_svm"

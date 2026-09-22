@@ -1,0 +1,24 @@
+# Project-level runtime config (paths, tracking, storage).
+# Secrets come from environment / .env (see .env.example), never committed.
+
+[paths]
+raw_dir = "data/raw"
+processed_dir = "data/processed"
+artifacts_dir = "artifacts"
+images_dir = "data/images"
+submissions_dir = "submissions"
+
+[data]
+train_file = "train.parquet.snappy"
+test_file = "test.parquet.snappy"
+tree_file = "tree.csv"
+label_column = "category_ind"
+
+[mlflow]
+tracking_uri = "http://localhost:5000"
+experiment_name = "ecom-category"
+
+[s3]
+endpoint_url = "https://minio.v-efimov.tech"
+bucket = "e.puzyreva"
+artifacts_prefix = "models"

@@ -1,0 +1,7 @@
+services:
+  research:
+    build: .
+    working_dir: /project
+    volumes:
+      - .:/project
+    command: bash scripts/run_end2end.sh

@@ -1,0 +1,23 @@
+# Текстовые эмбеддинги E5 + LogReg-голова (GPU для эмбеддингов).
+[dataset]
+label_column = "category_ind"
+
+[embeddings]
+text_model = "intfloat/multilingual-e5-large"
+use_image = false
+batch_size = 128
+text_cache = "artifacts/emb/text_train.npy"
+text_cache_test = "artifacts/emb/text_test.npy"
+
+[model]
+kind = "logreg"
+C = 8.0
+max_iter = 2000
+class_weight = "balanced"
+
+[split]
+test_size = 0.15
+random_state = 42
+
+[run]
+name = "run10_e5_logreg"

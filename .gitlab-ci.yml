@@ -1,0 +1,16 @@
+stages: [lint, test]
+variables:
+  PIP_NO_CACHE_DIR: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+lint:
+  image: python:3.11-slim
+  stage: lint
+  script:
+    - pip install --no-cache-dir "ruff==0.9.10"
+    - ruff check src service tests triton monitoring
+test:
+  image: python:3.11-slim
+  stage: test
+  script:
+    - pip install --no-cache-dir "pytest==8.3.5" "pandas==2.2.3" "numpy==2.1.3"
+    - PYTHONPATH=src pytest -q

@@ -1,0 +1,37 @@
+groups:
+  - name: ecom-service-alerts
+    rules:
+      - alert: ServiceDown
+        expr: up{job="ecom-service"} == 0
+        for: 1m
+        labels: { severity: critical }
+        annotations:
+          summary: "Сервис категоризации недоступен"
+          description: "Prometheus не может собрать метрики с service:8080 более 1 минуты."
+
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(ecom_predict_requests_total{status="500"}[5m]))
+          / clamp_min(sum(rate(ecom_predict_requests_total[5m])), 0.001) > 0.05
+        for: 2m
+        labels: { severity: warning }
+        annotations:
+          summary: "Высокая доля 5xx (>5%)"
+          description: "Более 5% запросов /predict падают с ошибкой за последние 5 минут."
+
+      - alert: HighLatencyP95
+        expr: |
+          histogram_quantile(0.95, sum(rate(ecom_predict_latency_seconds_bucket[5m])) by (le)) > 1.0
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Высокая задержка p95 (>1s)"
+          description: "95-й перцентиль времени ответа /predict превышает 1 секунду."
+
+      - alert: NoTraffic
+        expr: sum(rate(ecom_predict_requests_total[10m])) == 0
+        for: 15m
+        labels: { severity: info }
+        annotations:
+          summary: "Нет трафика на /predict 15 минут"
+          description: "Возможно, сервис не получает запросов или клиент сломан."

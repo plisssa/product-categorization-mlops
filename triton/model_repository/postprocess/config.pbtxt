@@ -1,0 +1,6 @@
+name: "postprocess"
+backend: "python"
+max_batch_size: 8
+input [ { name: "PROBS" data_type: TYPE_FP32 dims: [ -1 ] } ]
+output [ { name: "CATEGORY_IND" data_type: TYPE_INT64 dims: [ 1 ] } ]
+instance_group [ { kind: KIND_CPU } ]

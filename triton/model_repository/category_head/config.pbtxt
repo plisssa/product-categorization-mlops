@@ -1,0 +1,6 @@
+name: "category_head"
+platform: "onnxruntime_onnx"
+max_batch_size: 8
+input [ { name: "EMBEDDING" data_type: TYPE_FP32 dims: [ 1024 ] } ]
+output [ { name: "PROBS" data_type: TYPE_FP32 dims: [ -1 ] } ]
+instance_group [ { kind: KIND_CPU } ]

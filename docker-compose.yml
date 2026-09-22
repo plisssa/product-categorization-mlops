@@ -1,0 +1,71 @@
+# Полный стек сервиса. Запуск: ./run_service.sh
+# Профили: triton (MaaS на Triton), по умолчанию backend=local (надёжно на CPU).
+services:
+  service:
+    build:
+      context: .
+      dockerfile: service/Dockerfile
+    environment:
+      SERVICE_PORT: ${SERVICE_PORT:-8080}
+      MODEL_BACKEND: ${MODEL_BACKEND:-local}
+      REDIS_URL: redis://redis:6379/0
+      TRITON_URL: triton:8000
+      # Креды/настройки S3 пробрасываются в контейнер: модель качается ВНУТРИ него,
+      # поэтому от хоста проверяющего не нужны ни python, ни boto3. Значения берутся
+      # из окружения проверяющего или из .env (docker compose подхватывает .env сам).
+      LOCAL_MODEL_PATH: ${LOCAL_MODEL_PATH:-artifacts/serving/model.joblib}
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL:-https://minio.v-efimov.tech}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      S3_BUCKET: ${S3_BUCKET:-e.puzyreva}
+      S3_ARTIFACTS_PREFIX: ${S3_ARTIFACTS_PREFIX:-models}
+      MODEL_PUBLIC_URL: ${MODEL_PUBLIC_URL:-}
+    ports:
+      - "${SERVICE_PORT:-8080}:${SERVICE_PORT:-8080}"
+    volumes:
+      - ./artifacts:/app/artifacts
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+    ports:
+      - "9090:9090"
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "9093:9093"
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  triton:
+    image: nvcr.io/nvidia/tritonserver:24.08-py3
+    profiles: ["triton"]
+    command: tritonserver --model-repository=/models --strict-model-config=false
+    volumes:
+      - ./triton/model_repository:/models
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"

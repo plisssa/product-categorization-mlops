@@ -1,0 +1,27 @@
+[dataset]
+label_column = "category_ind"
+text_fields = ["vendor", "name"]
+include_domain = false
+
+[split]
+test_size = 0.15
+random_state = 42
+
+[vectorizer]
+analyzer = "word"
+ngram_min = 1
+ngram_max = 2
+min_df = 2
+max_features = 80000
+sublinear_tf = true
+
+[model]
+kind = "sgd"
+loss = "log_loss"
+alpha = 0.00001
+max_iter = 3000
+class_weight = "balanced"
+random_state = 42
+
+[run]
+name = "run01_vendor_name"

@@ -1,0 +1,65 @@
+[project]
+name = "ecom-category-project"
+version = "0.2.0"
+description = "Production ML Spring 2026: e-commerce product categorization (text + image), MaaS on Triton"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "pandas==2.2.3",
+  "numpy==2.1.3",
+  "scikit-learn==1.6.1",
+  "scipy==1.15.1",
+  "pyarrow==18.1.0",
+  "joblib==1.4.2",
+  "lightgbm==4.5.0",
+  "mlflow==3.4.0",
+  "boto3==1.37.1",
+  "python-dotenv==1.0.1",
+  "requests==2.32.3",
+  "beautifulsoup4==4.12.3",
+  "lxml==5.3.0",
+  "matplotlib==3.10.0",
+  "seaborn==0.13.2",
+  "tqdm==4.67.1",
+]
+
+# Heavy DL stack for text/image embeddings (run on a GPU box):  uv sync --extra embeddings
+[project.optional-dependencies]
+embeddings = [
+  "torch==2.5.1",
+  "torchvision==0.20.1",
+  "transformers==4.48.0",
+  "sentence-transformers==3.3.1",
+  "pillow==11.1.0",
+]
+dev = [
+  "pytest==8.3.5",
+  "ruff==0.9.10",
+  "mypy==1.14.1",
+  "types-requests",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ecom_category_project"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "service", "tests", "triton", "monitoring"]
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+explicit_package_bases = true
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

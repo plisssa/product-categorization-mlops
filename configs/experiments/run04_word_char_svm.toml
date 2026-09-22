@@ -1,0 +1,33 @@
+[dataset]
+label_column = "category_ind"
+text_fields = ["vendor", "name", "model", "type_prefix"]
+include_domain = true
+include_url_tokens = true
+description_max_len = 300
+url_token_limit = 12
+
+[split]
+test_size = 0.15
+random_state = 42
+
+[vectorizer]
+kind = "word_char"
+min_df = 2
+sublinear_tf = true
+word_ngram_min = 1
+word_ngram_max = 2
+word_max_features = 100000
+char_analyzer = "char_wb"
+char_ngram_min = 3
+char_ngram_max = 5
+char_max_features = 120000
+
+[model]
+kind = "linear_svc"
+C = 1.5
+max_iter = 5000
+class_weight = "balanced"
+random_state = 42
+
+[run]
+name = "run04_word_char_svm"

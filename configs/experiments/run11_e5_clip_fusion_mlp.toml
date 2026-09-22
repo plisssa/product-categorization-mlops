@@ -1,0 +1,29 @@
+# Late fusion: E5 (текст) + CLIP (картинки) -> MLP-голова. Максимальное качество.
+[dataset]
+label_column = "category_ind"
+
+[embeddings]
+text_model = "intfloat/multilingual-e5-large"
+use_image = true
+image_model = "openai/clip-vit-base-patch32"
+images_dir = "data/images"
+image_weight = 1.0
+batch_size = 128
+image_batch_size = 64
+text_cache = "artifacts/emb/text_train.npy"
+text_cache_test = "artifacts/emb/text_test.npy"
+image_cache = "artifacts/emb/image_train.npy"
+image_cache_test = "artifacts/emb/image_test.npy"
+
+[model]
+kind = "mlp"
+hidden_layer_sizes = [768]
+alpha = 1e-4
+max_iter = 80
+
+[split]
+test_size = 0.15
+random_state = 42
+
+[run]
+name = "run11_e5_clip_fusion_mlp"

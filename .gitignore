@@ -1,0 +1,42 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+.venv*/
+
+# Данные и артефакты (лежат на S3 / Kaggle, не в git)
+data/raw/*.parquet.snappy
+data/processed/*.csv.gz
+data/images/
+artifacts/
+submissions/*.csv
+mlruns/
+mlflow_docker/mlflow_data/
+*.joblib
+*.onnx
+*.npy
+*.npz
+images_download.log
+
+# Исключения из правил выше
+# Лёгкие головы на эмбеддингах (единицы МБ) — публикуем прямо в git.
+# Тяжёлая TF-IDF-модель туда не попадает: она в GitHub Releases.
+!checkpoints/*.joblib
+# Лучший submission — как пример формата вывода.
+!submissions/ensemble_clip.csv
+
+# Логи запусков (SLURM / локальные)
+logs/
+*.log
+*.out
+
+# Секреты
+.env
+
+# ОС / IDE
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,21 @@
+services:
+  mlflow_tracking_server:
+    build:
+      context: .
+      dockerfile: Dockerfile_mlflow
+    container_name: mlflow_server
+    ports:
+      - "5001:5001"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      MLFLOW_S3_ENDPOINT_URL: ${S3_ENDPOINT_URL}
+    volumes:
+      - ./mlflow_data:/app/mlflow_data
+    command: >
+      mlflow server
+      --backend-store-uri file:///app/mlflow_data
+      --host 0.0.0.0
+      --port 5001
+      --serve-artifacts
+      --artifacts-destination s3://${MLFLOW_BUCKET_NAME}/${MLFLOW_ARTIFACTS_PREFIX}
