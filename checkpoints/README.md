@@ -28,19 +28,25 @@ pred = head.predict(X)
 
 | Файл | Что это | Размер | Где взять |
 |------|---------|-------:|-----------|
-| `model.joblib` | TF-IDF (word + char_wb) + SGD, self-contained | ~460 МБ | ассет [GitHub Releases](../../releases) или S3/MinIO |
+| `model.joblib` | TF-IDF (word + char_wb) + SGD, self-contained | 437 МБ | ассет релиза [v1.0](../../releases/tag/v1.0) или S3/MinIO |
 
 Это модель, которую использует сервис: ей не нужны ни GPU, ни энкодеры, она
 считает предсказание из голого текста. В git не кладётся — GitHub блокирует
 файлы больше 100 МиБ.
 
 Сервис скачивает её сам при старте (`service/entrypoint.sh`): сначала пробует
-S3 по кредам `AWS_*`, при их отсутствии — прямую ссылку из `MODEL_PUBLIC_URL`.
+S3 по кредам `AWS_*`, при их отсутствии — прямую ссылку из `MODEL_PUBLIC_URL`
+(в `.env.example` она уже указана на ассет релиза).
 
 ```bash
 # вручную, если нужно локально
 mkdir -p artifacts/serving
-curl -fsSL "$MODEL_PUBLIC_URL" -o artifacts/serving/model.joblib
+curl -fsSL -o artifacts/serving/model.joblib \
+  https://github.com/plisssa/product-categorization-mlops/releases/download/v1.0/model.joblib
+
+# проверка целостности
+shasum -a 256 artifacts/serving/model.joblib
+# 82fbe3701a4461f24a7f2416a3e8fda46c73ecc563f274d44278eafc4e306eea
 ```
 
 ## Лучший результат

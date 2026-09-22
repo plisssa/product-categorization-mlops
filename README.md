@@ -228,22 +228,22 @@ Public leaderboard Kaggle, метрика macro-F1:
 
 | Что | Размер | Где |
 |-----|-------:|-----|
-| Головы на эмбеддингах (`e5_logreg`, `e5_clip_mlp`) | единицы МБ | `checkpoints/` — **в репозитории** |
-| TF-IDF-модель сервиса `model.joblib` | ~460 МБ | ассет в [Releases](../../releases) + S3/MinIO |
-| Лучший submission `ensemble_clip.csv` | 330 КБ | `submissions/` — в репозитории |
+| Головы на эмбеддингах (`e5_logreg`, `e5_clip_mlp`) | 1.6 и 15 МБ | `checkpoints/` — **в репозитории** |
+| TF-IDF-модель сервиса `model.joblib` | 437 МБ | ассет релиза [v1.0](../../releases/tag/v1.0) + S3/MinIO |
+| Лучший submission `ensemble_clip.csv` | 321 КБ | `submissions/` — в репозитории |
 | Эмбеддинги, остальные submissions | ГБ | S3/MinIO, `python scripts/upload_artifacts_s3.py down` |
 | EDA-графики, отчёт о дрифте | КБ | `docs/generated/` — в репозитории |
 
 Головы лёгкие, потому что энкодеры в них не входят: E5 и CLIP скачиваются с
 Hugging Face. А вот TF-IDF-модель self-contained — в ней весь словарь, поэтому
-460 МБ, и в git она не кладётся: GitHub блокирует файлы больше 100 МиБ, а
+437 МБ, и в git она не кладётся: GitHub блокирует файлы больше 100 МиБ, а
 бинарник в истории сделал бы любой `clone` неподъёмным.
 
 Сервис достаёт `model.joblib` сам при старте (`service/entrypoint.sh`): сначала
 пробует S3 по кредам `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`, при их
-отсутствии — прямую ссылку из `MODEL_PUBLIC_URL` (ассет релиза). Переменные
-задаются в `.env` (шаблон — [`.env.example`](.env.example)); если они уже есть
-в окружении, `.env` их **не** перетирает.
+отсутствии — прямую ссылку из `MODEL_PUBLIC_URL`. В `.env.example` она уже
+проставлена на ассет релиза, так что сервис поднимается и без доступа к S3.
+Если переменные уже есть в окружении, `.env` их **не** перетирает.
 
 Обучить всё с нуля: `bash scripts/train_full_pipeline.sh` (нужен GPU), затем
 `python scripts/upload_artifacts_s3.py up`.
